@@ -8,7 +8,9 @@ function createWindow(): void {
     height: 670,
     show: false,
     autoHideMenuBar: true,
+    title: "Rotion",
     backgroundColor: "#17141f",
+    titleBarStyle: "hiddenInset",
     ...(process.platform === "linux"
       ? { icon: path.join(__dirname, "../../build/icon.png") }
       : {}),
