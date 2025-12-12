@@ -1,6 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain } from "electron";
 import path, { join } from "node:path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
+import { registerRoute } from "../lib/electron-router-dom";
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -29,11 +30,11 @@ function createWindow(): void {
     return { action: "deny" };
   });
 
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-  }
+  registerRoute({
+    id: "main",
+    browserWindow: mainWindow,
+    htmlFile: path.join(__dirname, "../renderer/index.html"),
+  });
 }
 
 if (process.platform === "darwin") {
