@@ -7,6 +7,7 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1120,
     height: 700,
+    frame: process.platform === "linux" ? false : true,
     show: false,
     autoHideMenuBar: true,
     title: "Rotion",
