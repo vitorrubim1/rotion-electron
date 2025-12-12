@@ -1,4 +1,4 @@
-import { ToC } from "@renderer/components/ToC";
+import { ToC, Editor } from "@renderer/components";
 
 export function DocumentPage() {
   return (
@@ -17,7 +17,7 @@ export function DocumentPage() {
       </aside>
 
       <main className="flex-1 flex flex-col items-center">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+        <Editor />
       </main>
     </main>
   );
