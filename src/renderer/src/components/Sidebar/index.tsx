@@ -1,14 +1,20 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
-import * as Navigation from "./Navigation";
 import clsx from "clsx";
 import { CaretDoubleLeft } from "phosphor-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { CreatePage } from "./CreatePage";
 import { Profile } from "./Profile";
 import { Search } from "./Search";
+import * as Navigation from "./Navigation";
 
 export function Sidebar() {
   const isMacOS = process.platform === "darwin";
+
+  const { data } = useQuery({
+    queryKey: ["documents"],
+    queryFn: () => window.api.fetchDocument(),
+  });
 
   return (
     <Collapsible.Content className="bg-rotion-800 flex-shrink-0 border-r border-rotion-600 h-screen relative group data-[state=open]:animate-slideIn data-[state=closed]:animate-slideOut overflow-hidden">
@@ -46,10 +52,11 @@ export function Sidebar() {
           <Navigation.Section>
             <Navigation.SectionTitle>Workspace</Navigation.SectionTitle>
             <Navigation.SectionContent>
-              <Navigation.Link>Untitled</Navigation.Link>
-              <Navigation.Link>Discover</Navigation.Link>
-              <Navigation.Link>Ignite</Navigation.Link>
-              <Navigation.Link>Rocketseat</Navigation.Link>
+              {data?.map((document) => (
+                <Navigation.Link key={document.id}>
+                  {document.title}
+                </Navigation.Link>
+              ))}
             </Navigation.SectionContent>
           </Navigation.Section>
         </Navigation.Root>
