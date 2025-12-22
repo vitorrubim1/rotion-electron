@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { CaretDoubleLeft } from "phosphor-react";
 import { useQuery } from "@tanstack/react-query";
 
-import { CreatePage } from "./CreatePage";
+import { CreateDocument } from "./CreateDocument";
 import { Profile } from "./Profile";
 import { Search } from "./Search";
 import * as Navigation from "./Navigation";
@@ -15,7 +15,7 @@ export function Sidebar() {
     queryKey: ["documents"],
     queryFn: () => window.api.fetchDocuments(),
   });
-  console.log(data);
+
   return (
     <Collapsible.Content className="bg-rotion-800 flex-shrink-0 border-r border-rotion-600 h-screen relative group data-[state=open]:animate-slideIn data-[state=closed]:animate-slideOut overflow-hidden">
       <Collapsible.Trigger
@@ -61,7 +61,7 @@ export function Sidebar() {
           </Navigation.Section>
         </Navigation.Root>
 
-        <CreatePage />
+        <CreateDocument />
       </div>
     </Collapsible.Content>
   );
