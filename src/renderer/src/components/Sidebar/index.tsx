@@ -13,7 +13,7 @@ export function Sidebar() {
 
   const { data } = useQuery({
     queryKey: ["documents"],
-    queryFn: () => window.api.fetchDocument(),
+    queryFn: () => window.api.fetchDocuments(),
   });
   console.log(data);
   return (

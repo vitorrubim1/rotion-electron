@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { ElectronAPI, electronAPI } from "@electron-toolkit/preload";
 import { IPC_EVENTS } from "@shared/constants/ipc";
-import { type FetchAllDocumentsResponse } from "@shared/types/ipc";
+import * as DTO from "@shared/types/ipc";
 
 declare global {
   export interface Window {
@@ -12,8 +12,26 @@ declare global {
 
 // Custom APIs for renderer
 const api = {
-  fetchDocument(): Promise<FetchAllDocumentsResponse> {
+  fetchDocuments(): Promise<DTO.FetchAllDocumentsResponse> {
     return ipcRenderer.invoke(IPC_EVENTS.DOCUMENTS.FETCH_ALL);
+  },
+
+  fetchDocument(
+    request: DTO.FetchDocumentRequest
+  ): Promise<DTO.FetchDocumentResponse> {
+    return ipcRenderer.invoke(IPC_EVENTS.DOCUMENTS.FETCH, request);
+  },
+
+  createDocument(): Promise<DTO.CreateDocumentResponse> {
+    return ipcRenderer.invoke(IPC_EVENTS.DOCUMENTS.CREATE);
+  },
+
+  saveDocument(request: DTO.SaveDocumentRequest): Promise<void> {
+    return ipcRenderer.invoke(IPC_EVENTS.DOCUMENTS.SAVE, request);
+  },
+
+  deleteDocument(request: DTO.DeleteDocumentRequest): Promise<void> {
+    return ipcRenderer.invoke(IPC_EVENTS.DOCUMENTS.DELETE, request);
   },
 };
 
