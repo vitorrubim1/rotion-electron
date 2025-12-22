@@ -1,10 +1,17 @@
 import { ipcMain } from "electron";
+import { IPC_EVENTS } from "@shared/constants/ipc";
+import { FetchAllDocumentsResponse } from "@shared/types/ipc";
 
-ipcMain.handle("fetch-documents", async () => {
-  return [
-    { id: "1", title: "Document 1", content: "Content 1" },
-    { id: "2", title: "Document 2", content: "Content 2" },
-    { id: "3", title: "Document 3", content: "Content 3" },
-    { id: "4", title: "Document 4", content: "Content 4" },
-  ];
-});
+ipcMain.handle(
+  IPC_EVENTS.DOCUMENTS.FETCH_ALL,
+  async (): Promise<FetchAllDocumentsResponse> => {
+    return {
+      data: [
+        { id: "1", title: "Untitled", content: "" },
+        { id: "2", title: "Discover", content: "" },
+        { id: "3", title: "Ignite", content: "" },
+        { id: "4", title: "Documentação", content: "" },
+      ],
+    };
+  }
+);

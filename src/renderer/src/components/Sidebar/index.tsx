@@ -15,7 +15,7 @@ export function Sidebar() {
     queryKey: ["documents"],
     queryFn: () => window.api.fetchDocument(),
   });
-
+  console.log(data);
   return (
     <Collapsible.Content className="bg-rotion-800 flex-shrink-0 border-r border-rotion-600 h-screen relative group data-[state=open]:animate-slideIn data-[state=closed]:animate-slideOut overflow-hidden">
       <Collapsible.Trigger
@@ -52,7 +52,7 @@ export function Sidebar() {
           <Navigation.Section>
             <Navigation.SectionTitle>Workspace</Navigation.SectionTitle>
             <Navigation.SectionContent>
-              {data?.map((document) => (
+              {data?.data?.map((document) => (
                 <Navigation.Link key={document.id}>
                   {document.title}
                 </Navigation.Link>

@@ -1,4 +1,6 @@
-import Store from "electron-store";
+import StorePkg from "electron-store";
+const Store =
+  (StorePkg as unknown as { default: typeof StorePkg }).default || StorePkg;
 
 interface StoreProps {
   documents: Record<string, any>;
