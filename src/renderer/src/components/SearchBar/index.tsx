@@ -1,24 +1,41 @@
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
 import { File, MagnifyingGlass } from "phosphor-react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-export function SearchBar() {
-  const [open, setOpen] = useState(false);
+interface SearchBarProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function SearchBar({ open, onOpenChange }: SearchBarProps) {
+  const navigate = useNavigate();
+
+  const { data } = useQuery({
+    queryKey: ["documents"],
+    queryFn: () => window.api.fetchDocuments(),
+  });
+
+  function handleOpenDocument(documentId: string) {
+    navigate(`/document/${documentId}`);
+    onOpenChange(false);
+  }
 
   useEffect(() => {
     const down = (event: KeyboardEvent) => {
-      if (event.key === "k" && event.metaKey) setOpen((state) => !state);
+      if (event.key === "k" && event.metaKey) onOpenChange(!open);
     };
 
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, [setOpen]);
+  }, [onOpenChange, open]);
 
   return (
     <Command.Dialog
       className="fixed top-24 left-1/2 -translate-x-1/2 w-[480px] max-w-full bg-rotion-800 rounded-md shadow-2xl text-rotion-100 border border-rotion-600"
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={onOpenChange}
       label="Search"
     >
       <div className="flex items-center gap-2 border-b border-rotion-700 p-4">
@@ -26,7 +43,7 @@ export function SearchBar() {
         <Command.Input
           autoFocus
           placeholder="Buscar documentos..."
-          className="w-full bg-transparent focus:outline-none text-sm text-rotion-50 placeholder:text-rotion-200"
+          className="w-full bg-rotion-800 focus:outline-none text-sm text-rotion-50 placeholder:text-rotion-200"
         />
       </div>
       <Command.List className="py-2 max-h-48 scrollbar-thin scrollbar-thumb-rotion-600 scrollbar-track-rotion-800">
@@ -34,25 +51,16 @@ export function SearchBar() {
           Nenhum documento encontrado.
         </Command.Empty>
 
-        <Command.Item className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600">
-          <File className="w-4 h-4" />
-          Untitled
-        </Command.Item>
-
-        <Command.Item className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600">
-          <File className="w-4 h-4" />
-          Ignite
-        </Command.Item>
-
-        <Command.Item className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600">
-          <File className="w-4 h-4" />
-          Discover
-        </Command.Item>
-
-        <Command.Item className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600">
-          <File className="w-4 h-4" />
-          Rocketseat
-        </Command.Item>
+        {data?.data.map((document) => (
+          <Command.Item
+            key={document.id}
+            onSelect={() => handleOpenDocument(document.id)}
+            className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600"
+          >
+            <File className="w-4 h-4" />
+            {document.title}
+          </Command.Item>
+        ))}
       </Command.List>
     </Command.Dialog>
   );
