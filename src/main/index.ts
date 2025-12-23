@@ -5,6 +5,7 @@ import { registerRoute } from "../lib/electron-router-dom";
 
 import "./ipc";
 import "./store";
+import "./tray";
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
