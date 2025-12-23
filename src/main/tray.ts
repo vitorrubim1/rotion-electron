@@ -1,22 +1,25 @@
 import { app, BrowserWindow, Menu, nativeImage, Tray } from "electron";
 import path from "node:path";
+import { IPC_EVENTS } from "../shared/constants/ipc";
 
-app.whenReady().then(() => {
+export function createTray(window: BrowserWindow) {
   const tray = new Tray(path.resolve("resources/rotionTemplate.png"));
 
   const menu = Menu.buildFromTemplate([
     { label: "Rotion", enabled: false },
-    { label: "Sair", click: () => app.quit() },
     { type: "separator" },
     {
-      label: "Abrir",
+      label: "Novo documento",
       click: () => {
-        const mainWindow = BrowserWindow.getAllWindows()[0];
-        mainWindow.show();
+        window.webContents.send("new-document");
       },
     },
-    { type: "checkbox", label: "Ativar darkmode" },
+    { type: "separator" },
+    { label: "Documentos recentes", enabled: false },
+    { label: "Ignite", accelerator: "CommandOrControl+1" },
+    { type: "separator" },
+    { label: "Sair", role: "quit" },
   ]);
 
   tray.setContextMenu(menu);
-});
+}
