@@ -34,11 +34,15 @@ module.exports = {
         from: { width: "var(--radix-collapsible-content-width)" },
         to: { width: 0 },
       },
+      spin: {
+        to: { transform: "rotate(360deg)" },
+      },
     },
 
     animation: {
       slideIn: "slideIn 0.25s ease-out",
       slideOut: "slideOut 0.25s ease-out",
+      spin: "spin 1s linear infinite",
     },
   },
   plugins: [

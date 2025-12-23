@@ -7,8 +7,10 @@ import { store } from "./store";
 ipcMain.handle(
   IPC_EVENTS.DOCUMENTS.FETCH_ALL,
   async (): Promise<DTO.FetchAllDocumentsResponse> => {
+    const documents = store.get("documents");
+
     return {
-      data: Object.values(store.get("documents")),
+      data: Object.values(documents),
     };
   }
 );
