@@ -1,9 +1,11 @@
-import { ToC, Editor } from "@renderer/components";
+import { ToC, Editor, OnContentUpdatedParams } from "@renderer/components";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { FetchAllDocumentsResponse } from "@shared/types/ipc";
 
 export function DocumentPage() {
+  const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
   const { data, isFetching } = useQuery({
@@ -15,6 +17,29 @@ export function DocumentPage() {
     },
   });
 
+  const { mutateAsync: saveDocument, isPending: isSavingDocument } =
+    useMutation({
+      mutationFn: ({ title, content }: OnContentUpdatedParams) => {
+        if (!id) throw new Error("Document id is required");
+
+        return window.api.saveDocument({ id, title, content });
+      },
+      onSuccess: (_, { title }) => {
+        queryClient.setQueryData<FetchAllDocumentsResponse>(
+          ["documents"],
+          (oldData) => {
+            return {
+              data: oldData?.data?.map((document) => {
+                if (document.id === id) return { ...document, title };
+
+                return document;
+              }),
+            } as FetchAllDocumentsResponse;
+          }
+        );
+      },
+    });
+
   const initialContent = useMemo(() => {
     const finalData = data?.data;
 
@@ -24,6 +49,13 @@ export function DocumentPage() {
 
     return "";
   }, [data]);
+
+  function handleContentEditorUpdated({
+    title,
+    content,
+  }: OnContentUpdatedParams) {
+    saveDocument({ title, content });
+  }
 
   return (
     <main className="flex-1 flex py-12 px-10 gap-8">
@@ -41,7 +73,12 @@ export function DocumentPage() {
       </aside>
 
       <main className="flex-1 flex flex-col items-center">
-        {!isFetching && data && <Editor content={initialContent} />}
+        {!isFetching && data && (
+          <Editor
+            content={initialContent}
+            onContentUpdated={handleContentEditorUpdated}
+          />
+        )}
       </main>
     </main>
   );
