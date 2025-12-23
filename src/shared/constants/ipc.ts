@@ -6,4 +6,8 @@ export const IPC_EVENTS = {
     SAVE: "documents: save",
     DELETE: "documents: delete",
   },
+
+  SHORTCUTS: {
+    NEW_DOCUMENT: "shortcuts: new-document",
+  },
 };

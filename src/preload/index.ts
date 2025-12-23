@@ -33,10 +33,10 @@ const api = {
   },
 
   onNewDocumentRequested(callback: () => void) {
-    ipcRenderer.on("new-document", callback);
+    ipcRenderer.on(IPC_EVENTS.SHORTCUTS.NEW_DOCUMENT, callback);
 
     return () => {
-      ipcRenderer.off("new-document", callback);
+      ipcRenderer.off(IPC_EVENTS.SHORTCUTS.NEW_DOCUMENT, callback);
     };
   },
 };
