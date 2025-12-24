@@ -14,5 +14,3 @@ export const store = new Store<StoreProps>({
     documents: {},
   },
 });
-
-console.log(store.path);

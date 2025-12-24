@@ -3,7 +3,9 @@ import path from "node:path";
 import { IPC_EVENTS } from "../shared/constants/ipc";
 
 export function createTray(window: BrowserWindow) {
-  const tray = new Tray(path.resolve("resources/rotionTemplate.png"));
+  const tray = new Tray(
+    path.join(__dirname, "..", "..", "resources", "rotionTemplate.png")
+  );
 
   const menu = Menu.buildFromTemplate([
     { label: "Rotion", enabled: false },
